@@ -4,162 +4,1032 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Head or Tails</title>
+<title>FLIPX | Head or Tails</title>
 
 <style>
+:root {
+  --bg:#080b18;
+  --panel:#11182b;
+  --cyan:#00f5ff;
+  --purple:#a855f7;
+  --orange:#ffb52e;
+  --text:#f5f7ff;
+  --muted:#8993b0;
+}
+
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
 body {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #080816;
-  color: white;
-  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%,#17214b,transparent 35%),
+    radial-gradient(circle at 90% 80%,#271347,transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+  min-height:100vh;
+  padding:22px;
 }
 
-.game {
-  text-align: center;
+button,select,input { font:inherit; }
+
+button {
+  cursor:pointer;
+  border:0;
 }
 
-h1 {
-  color: #00f5ff;
-  margin-bottom: 35px;
-  text-shadow: 0 0 15px #00f5ff;
+.container {
+  max-width:1100px;
+  margin:auto;
 }
 
-.coin-area {
-  perspective: 1000px;
-  margin: 40px auto;
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:35px;
+}
+
+.logo {
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:3px;
+  color:var(--cyan);
+  text-shadow:0 0 18px var(--cyan);
+}
+
+.logo span { color:var(--orange); }
+
+.header-right {
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.small-btn {
+  background:var(--panel);
+  border:1px solid #34405d;
+  color:white;
+  padding:11px 15px;
+  border-radius:10px;
+}
+
+.hero {
+  text-align:center;
+  margin-bottom:28px;
+}
+
+.hero h1 {
+  font-size:clamp(30px,6vw,52px);
+  letter-spacing:3px;
+  margin-bottom:10px;
+}
+
+.hero h1 span { color:var(--cyan); }
+
+.hero p { color:var(--muted); }
+
+.panel {
+  background:rgba(17,24,43,.92);
+  border:1px solid #293755;
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 0 25px rgba(0,245,255,.06);
+}
+
+.game-layout {
+  display:grid;
+  grid-template-columns:1.5fr 1fr;
+  gap:20px;
+}
+
+.game-panel {
+  text-align:center;
+}
+
+.section-title {
+  font-size:17px;
+  margin-bottom:18px;
+  color:var(--cyan);
+  letter-spacing:1px;
+}
+
+.mode-buttons {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.mode-btn {
+  padding:11px 20px;
+  border-radius:9px;
+  background:#1b2540;
+  color:#bdc6e0;
+  border:1px solid #394565;
+}
+
+.mode-btn.active {
+  background:var(--cyan);
+  color:#07111b;
+  font-weight:bold;
+  box-shadow:0 0 15px rgba(0,245,255,.4);
+}
+
+.player-area {
+  min-height:65px;
+  margin-bottom:5px;
+}
+
+.player-area p {
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:8px;
+}
+
+.player-area strong {
+  color:var(--orange);
+  font-size:19px;
+}
+
+.coin-stage {
+  height:210px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  perspective:1000px;
+  margin:10px 0 20px;
 }
 
 .coin {
-  width: 150px;
-  height: 150px;
-  position: relative;
-  margin: auto;
-  transform-style: preserve-3d;
+  width:155px;
+  height:155px;
+  position:relative;
+  transform-style:preserve-3d;
+  transform:rotateY(0deg);
 }
 
-.side {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 25px;
-  font-weight: bold;
-  color: #332000;
-  background: linear-gradient(135deg, #fff08a, #ffb700, #d88900);
-  border: 7px solid #ffe36e;
-  box-shadow: 0 0 25px #ffb700;
-  backface-visibility: hidden;
+.coin-face {
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  gap:8px;
+  backface-visibility:hidden;
+  border:8px solid #ffe18b;
+  background:linear-gradient(145deg,#fff6b4,#ffbd32,#b86d00);
+  color:#4a2d00;
+  box-shadow:inset 0 0 15px #fff,0 0 30px #ffb52e;
 }
 
-.tails {
-  transform: rotateY(180deg);
+.coin-face span { font-size:44px; }
+.coin-face strong { font-size:19px; letter-spacing:2px; }
+
+.coin-back {
+  transform:rotateY(180deg);
+  background:linear-gradient(145deg,#d9ffff,#25cfff,#0069b7);
+  color:#002d4c;
+  border-color:#a0f4ff;
+  box-shadow:inset 0 0 15px white,0 0 30px #00cfff;
 }
 
 .coin.spinning {
-  animation: flip 2s ease-in-out forwards;
+  transition:transform 3s cubic-bezier(.12,.75,.2,1);
 }
 
-@keyframes flip {
-  from { transform: rotateY(0deg); }
-  to { transform: rotateY(1800deg); }
+.guess-label {
+  color:var(--muted);
+  margin-bottom:12px;
+  font-size:13px;
 }
 
-button {
-  padding: 14px 35px;
-  background: #00f5ff;
-  color: #080816;
-  border: none;
-  border-radius: 30px;
-  font-size: 17px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 0 20px #00f5ff;
+.guess-buttons {
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-bottom:20px;
 }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.guess-btn {
+  padding:12px 22px;
+  background:#1b2540;
+  color:white;
+  border:1px solid #394565;
+  border-radius:10px;
+  min-width:110px;
 }
 
-#result {
-  margin-top: 25px;
-  font-size: 25px;
-  color: #ffcf40;
-  min-height: 30px;
+.guess-btn.selected {
+  border-color:var(--cyan);
+  color:var(--cyan);
+  box-shadow:0 0 12px rgba(0,245,255,.3);
+}
+
+.main-btn {
+  padding:15px 45px;
+  border-radius:12px;
+  background:linear-gradient(90deg,var(--cyan),#438bff);
+  color:#07111b;
+  font-weight:900;
+  letter-spacing:1px;
+  box-shadow:0 0 20px rgba(0,245,255,.3);
+  transition:.2s;
+}
+
+.main-btn:hover { transform:scale(1.04); }
+
+.main-btn:disabled {
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.result {
+  min-height:45px;
+  margin-top:22px;
+  font-size:25px;
+  font-weight:bold;
+  color:var(--orange);
+  text-shadow:0 0 12px #ffb52e;
+}
+
+.message {
+  color:var(--muted);
+  font-size:13px;
+  min-height:20px;
+  margin-top:5px;
+}
+
+.stats-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.stat-card {
+  padding:17px 10px;
+  background:#18223a;
+  border:1px solid #2d3a59;
+  border-radius:12px;
+  text-align:center;
+}
+
+.stat-card h2 {
+  font-size:28px;
+  color:var(--cyan);
+  margin-bottom:7px;
+}
+
+.stat-card p {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.side-panel {
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.history-list {
+  list-style:none;
+  max-height:220px;
+  overflow:auto;
+}
+
+.history-list li {
+  display:flex;
+  justify-content:space-between;
+  padding:11px 5px;
+  border-bottom:1px solid #293755;
+  font-size:13px;
+  gap:10px;
+}
+
+.history-list .heads { color:#ffcc58; }
+.history-list .tails { color:var(--cyan); }
+
+.empty {
+  color:var(--muted);
+  text-align:center;
+  padding:15px 0;
+  font-size:13px;
+}
+
+.leader-list {
+  list-style:none;
+}
+
+.leader-list li {
+  display:flex;
+  justify-content:space-between;
+  padding:12px 5px;
+  border-bottom:1px solid #293755;
+  gap:10px;
+  font-size:14px;
+}
+
+.leader-list li span:last-child { color:var(--orange); }
+
+.lower-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:20px;
+}
+
+.settings-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin:14px 0;
+  color:#cbd3e8;
+  font-size:14px;
+}
+
+.settings-row select {
+  padding:9px;
+  border-radius:8px;
+  color:white;
+  background:#1b2540;
+  border:1px solid #394565;
+}
+
+.settings-row input { accent-color:var(--cyan); }
+
+.player-inputs {
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.player-inputs input {
+  width:50%;
+  min-width:0;
+  background:#1b2540;
+  border:1px solid #394565;
+  border-radius:9px;
+  padding:11px;
+  color:white;
+}
+
+.secondary-btn {
+  background:#27314b;
+  border:1px solid #465473;
+  color:white;
+  padding:10px 16px;
+  border-radius:9px;
+}
+
+.danger-btn {
+  background:#401b30;
+  border:1px solid #a94372;
+  color:#ff8eb8;
+  padding:10px 16px;
+  border-radius:9px;
+}
+
+footer {
+  text-align:center;
+  color:#67728f;
+  margin:30px 0 10px;
+  font-size:12px;
+}
+
+.hidden { display:none !important; }
+
+body.light {
+  --bg:#eaf0ff;
+  --panel:#fff;
+  --text:#17213b;
+  --muted:#68738e;
+}
+
+body.light .panel,
+body.light .stat-card {
+  background:#fff;
+  color:#17213b;
+  border-color:#ccd7ee;
+}
+
+body.light .mode-btn,
+body.light .guess-btn,
+body.light .small-btn,
+body.light .settings-row select,
+body.light .player-inputs input {
+  background:#e9efff;
+  color:#17213b;
+}
+
+@media(max-width:750px) {
+  body { padding:12px; }
+  .game-layout,.lower-grid { grid-template-columns:1fr; }
+  .hero h1 { font-size:34px; }
+  .panel { padding:17px; }
 }
 </style>
 </head>
 
 <body>
-<div class="game">
-  <h1>HEAD OR TAILS</h1>
 
-  <div class="coin-area">
-    <div class="coin" id="coin">
-      <div class="side">HEAD</div>
-      <div class="side tails">TAILS</div>
-    </div>
+<div class="container">
+
+<header>
+  <div class="logo">FLIP<span>X</span></div>
+  <div class="header-right">
+    <span style="color:#8993b0;font-size:12px">ARCADE GAME</span>
+    <button class="small-btn" id="settingsTop">⚙ Settings</button>
   </div>
+</header>
 
-  <button id="spinBtn" onclick="spinCoin()">SPIN COIN</button>
+<section class="hero">
+  <h1>HEAD OR <span>TAILS?</span></h1>
+  <p>Flip the coin. Trust your luck. Rule the game.</p>
+</section>
 
-  <div id="result">Ready to flip?</div>
+<div class="game-layout">
+
+  <section class="panel game-panel">
+
+    <h3 class="section-title">🎮 GAME ARENA</h3>
+
+    <div class="mode-buttons">
+      <button class="mode-btn active" data-mode="single">Single Player</button>
+      <button class="mode-btn" data-mode="two">Two Player</button>
+    </div>
+
+    <div class="player-area">
+      <p id="turnLabel">YOUR TURN</p>
+      <strong id="playerName">PLAYER 1</strong>
+    </div>
+
+    <div class="coin-stage">
+      <div class="coin" id="coin">
+        <div class="coin-face">
+          <span>👑</span>
+          <strong>HEADS</strong>
+        </div>
+        <div class="coin-face coin-back">
+          <span>⚡</span>
+          <strong>TAILS</strong>
+        </div>
+      </div>
+    </div>
+
+    <p class="guess-label">MAKE YOUR GUESS</p>
+
+    <div class="guess-buttons">
+      <button class="guess-btn selected" data-guess="HEADS">👑 HEADS</button>
+      <button class="guess-btn" data-guess="TAILS">⚡ TAILS</button>
+    </div>
+
+    <button class="main-btn" id="flipBtn">FLIP COIN</button>
+
+    <div class="result" id="result">READY TO FLIP?</div>
+    <div class="message" id="message">Choose your side and test your luck!</div>
+
+    <div style="margin-top:20px">
+      <button class="secondary-btn" id="resetBtn">↻ Reset Game</button>
+    </div>
+
+  </section>
+
+  <aside class="side-panel">
+
+    <section class="panel">
+      <h3 class="section-title">📊 SCOREBOARD</h3>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h2 id="total">0</h2>
+          <p>TOTAL FLIPS</p>
+        </div>
+        <div class="stat-card">
+          <h2 id="wins">0</h2>
+          <p>WINS</p>
+        </div>
+        <div class="stat-card">
+          <h2 id="losses">0</h2>
+          <p>LOSSES</p>
+        </div>
+        <div class="stat-card">
+          <h2 id="percentage">0%</h2>
+          <p>WIN RATE</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3 class="section-title">📜 FLIP HISTORY</h3>
+      <ul class="history-list" id="history">
+        <li class="empty">No flips yet</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h3 class="section-title">🏆 LEADERBOARD</h3>
+      <ol class="leader-list" id="leaderboard">
+        <li class="empty">No scores yet</li>
+      </ol>
+      <p style="font-size:11px;color:#8993b0;margin-top:12px">
+        Scores are saved on this browser.
+      </p>
+    </section>
+
+  </aside>
+</div>
+
+<div class="lower-grid">
+
+  <section class="panel">
+    <h3 class="section-title">⚙ GAME SETTINGS</h3>
+
+    <div class="settings-row">
+      <label for="soundToggle">Sound effects</label>
+      <input type="checkbox" id="soundToggle" checked>
+    </div>
+
+    <div class="settings-row">
+      <label for="speedSelect">Animation speed</label>
+      <select id="speedSelect">
+        <option value="3">Normal</option>
+        <option value="1.5">Fast</option>
+        <option value="5">Slow</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <label for="themeSelect">Theme</label>
+      <select id="themeSelect">
+        <option value="neon">Neon Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </div>
+
+  </section>
+
+  <section class="panel">
+    <h3 class="section-title">👥 PLAYER SETTINGS</h3>
+
+    <div class="player-inputs">
+      <input id="name1" type="text" maxlength="15"
+        placeholder="Player 1" value="Player 1">
+      <input id="name2" type="text" maxlength="15"
+        placeholder="Player 2" value="Player 2">
+    </div>
+
+    <button class="secondary-btn" id="saveNames">Save Names</button>
+
+    <p style="font-size:12px;color:#8993b0;margin-top:14px">
+      In two-player mode, players take turns guessing the coin result.
+    </p>
+  </section>
+
+</div>
+
+<footer>
+  FLIPX © 2026 | BUILT FOR GAMERS
+</footer>
+
 </div>
 
 <script>
-const coin = document.getElementById("coin");
-const button = document.getElementById("spinBtn");
-const result = document.getElementById("result");
+/* =========================
+   GAME VARIABLES
+========================= */
 
+const $ = id => document.getElementById(id);
+
+const coin = $("coin");
+const flipBtn = $("flipBtn");
+
+let mode = "single";
+let selectedGuess = "HEADS";
+let activePlayer = 0;
 let spinning = false;
+let currentRotation = 0;
+
+let duration = 3000;
+let soundEnabled = true;
+
+let players = [
+  {name:"Player 1",wins:0,losses:0},
+  {name:"Player 2",wins:0,losses:0}
+];
+
+let total = 0;
+let history = [];
+
+let leaderboard = [];
+
+try {
+  leaderboard = JSON.parse(
+    localStorage.getItem("flipxLeaderboard") || "[]"
+  );
+  if (!Array.isArray(leaderboard)) leaderboard = [];
+} catch(e) {
+  leaderboard = [];
+}
+
+/* =========================
+   SOUND SYSTEM
+========================= */
+
+let audioContext;
+
+function playSound(type) {
+  if (!soundEnabled) return;
+
+  try {
+    audioContext ||= new (
+      window.AudioContext || window.webkitAudioContext
+    )();
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    const now = audioContext.currentTime;
+
+    if (type === "spin") {
+      oscillator.type = "triangle";
+      oscillator.frequency.setValueAtTime(180,now);
+      oscillator.frequency.exponentialRampToValueAtTime(700,now+.3);
+      gain.gain.setValueAtTime(.12,now);
+      gain.gain.exponentialRampToValueAtTime(.001,now+.35);
+      oscillator.start(now);
+      oscillator.stop(now+.36);
+    } else {
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(
+        type === "win" ? 750 : 250,now
+      );
+      gain.gain.setValueAtTime(.15,now);
+      gain.gain.exponentialRampToValueAtTime(.001,now+.45);
+      oscillator.start(now);
+      oscillator.stop(now+.46);
+    }
+  } catch(e) {
+    console.log("Audio unavailable");
+  }
+}
+
+/* =========================
+   PLAYER AND MODE
+========================= */
+
+function updatePlayer() {
+  const player = players[activePlayer];
+
+  $("playerName").textContent = player.name.toUpperCase();
+  $("turnLabel").textContent =
+    mode === "two" ? "CURRENT PLAYER TURN" : "YOUR TURN";
+}
+
+document.querySelectorAll("[data-mode]").forEach(button => {
+  button.addEventListener("click", () => {
+    if (spinning) return;
+
+    mode = button.dataset.mode;
+    activePlayer = 0;
+
+    document.querySelectorAll("[data-mode]").forEach(b => {
+      b.classList.toggle("active",b === button);
+    });
+
+    updatePlayer();
+
+    $("message").textContent =
+      mode === "two"
+      ? "Players take turns. Make your guess!"
+      : "Choose your side and test your luck!";
+  });
+});
+
+document.querySelectorAll("[data-guess]").forEach(button => {
+  button.addEventListener("click", () => {
+    if (spinning) return;
+
+    selectedGuess = button.dataset.guess;
+
+    document.querySelectorAll("[data-guess]").forEach(b => {
+      b.classList.toggle("selected",b === button);
+    });
+  });
+});
+
+/* =========================
+   COIN FLIP ANIMATION
+========================= */
 
 function spinCoin() {
   if (spinning) return;
 
   spinning = true;
-  button.disabled = true;
-  result.textContent = "Spinning...";
+  flipBtn.disabled = true;
 
-  const isHeads = Math.random() < 0.5;
+  const guess = selectedGuess;
+  const playerIndex = activePlayer;
+  const player = players[playerIndex];
 
-  coin.classList.remove("spinning");
+  const outcome = Math.random() < .5 ? "HEADS" : "TAILS";
 
-  // Reset animation
-  coin.style.transform = isHeads
-    ? "rotateY(0deg)"
-    : "rotateY(180deg)";
+  $("result").textContent = "SPINNING...";
+  $("message").textContent = "Good luck, " + player.name + "!";
 
-  void coin.offsetWidth;
+  playSound("spin");
 
-  coin.style.transform = "";
+  const target = outcome === "HEADS" ? 0 : 180;
+  const currentSide = ((currentRotation % 360) + 360) % 360;
+  const difference = (target - currentSide + 360) % 360;
+  const rotations = 5 + Math.floor(Math.random()*3);
+
+  currentRotation += rotations*360 + difference;
+
+  coin.style.transition =
+    `transform ${duration/1000}s cubic-bezier(.12,.75,.2,1)`;
+
   coin.classList.add("spinning");
+  coin.style.transform = `rotateY(${currentRotation}deg)`;
 
   setTimeout(() => {
     coin.classList.remove("spinning");
 
-    coin.style.transform = isHeads
-      ? "rotateY(1800deg)"
-      : "rotateY(1980deg)";
+    const won = guess === outcome;
 
-    result.textContent = isHeads
-      ? "🪙 HEADS!"
-      : "🪙 TAILS!";
+    total++;
 
-    button.disabled = false;
+    if (won) {
+      player.wins++;
+      playSound("win");
+    } else {
+      player.losses++;
+      playSound("lose");
+    }
+
+    $("result").textContent =
+      outcome === "HEADS" ? "👑 HEADS!" : "⚡ TAILS!";
+
+    $("message").textContent = won
+      ? "🎉 " + player.name + " WON THIS ROUND!"
+      : "Not this time, " + player.name + "!";
+
+    history.unshift({
+      number:total,
+      player:player.name,
+      guess:guess,
+      outcome:outcome,
+      won:won
+    });
+
+    history = history.slice(0,20);
+
+    updateStats();
+    renderHistory();
+    updatePlayer();
+
+    if (mode === "two") {
+      activePlayer = activePlayer === 0 ? 1 : 0;
+      updatePlayer();
+    }
+
     spinning = false;
-  }, 2000);
+    flipBtn.disabled = false;
+
+  },duration + 100);
 }
+
+flipBtn.addEventListener("click",spinCoin);
+
+/* =========================
+   SCOREBOARD
+========================= */
+
+function updateStats() {
+  const wins = players.reduce((sum,p) => sum+p.wins,0);
+  const losses = players.reduce((sum,p) => sum+p.losses,0);
+
+  $("total").textContent = total;
+  $("wins").textContent = wins;
+  $("losses").textContent = losses;
+
+  $("percentage").textContent =
+    total ? Math.round(wins/total*100)+"%" : "0%";
+}
+
+/* =========================
+   HISTORY
+========================= */
+
+function renderHistory() {
+  const list = $("history");
+  list.innerHTML = "";
+
+  if (!history.length) {
+    list.innerHTML = '<li class="empty">No flips yet</li>';
+    return;
+  }
+
+  history.forEach(item => {
+    const li = document.createElement("li");
+
+    const left = document.createElement("span");
+    left.textContent =
+      "#" + item.number + " " + item.player + " (" + item.guess + ")";
+
+    const right = document.createElement("span");
+    right.textContent =
+      (item.outcome === "HEADS" ? "👑 HEADS" : "⚡ TAILS") +
+      (item.won ? " ✓" : " ✗");
+
+    right.className =
+      item.outcome === "HEADS" ? "heads" : "tails";
+
+    li.append(left,right);
+    list.appendChild(li);
+  });
+}
+
+/* =========================
+   LEADERBOARD
+========================= */
+
+function renderLeaderboard() {
+  const list = $("leaderboard");
+  list.innerHTML = "";
+
+  if (!leaderboard.length) {
+    list.innerHTML = '<li class="empty">No scores yet</li>';
+    return;
+  }
+
+  leaderboard.slice(0,10).forEach((entry,index) => {
+    const li = document.createElement("li");
+
+    const name = document.createElement("span");
+    name.textContent =
+      ["🥇 ","🥈 ","🥉 "][index] || (index+1)+". ";
+    name.textContent += entry.name;
+
+    const score = document.createElement("span");
+    score.textContent = entry.score + " wins";
+
+    li.append(name,score);
+    list.appendChild(li);
+  });
+}
+
+function saveLeaderboard() {
+  players.forEach(player => {
+    if (!player.wins) return;
+
+    const existing = leaderboard.find(
+      entry => entry.name.toLowerCase() === player.name.toLowerCase()
+    );
+
+    if (existing) {
+      existing.score = Math.max(existing.score,player.wins);
+    } else {
+      leaderboard.push({
+        name:player.name,
+        score:player.wins
+      });
+    }
+  });
+
+  leaderboard.sort((a,b) => b.score-a.score);
+  leaderboard = leaderboard.slice(0,10);
+
+  try {
+    localStorage.setItem(
+      "flipxLeaderboard",
+      JSON.stringify(leaderboard)
+    );
+  } catch(e) {
+    console.log("Could not save leaderboard");
+  }
+
+  renderLeaderboard();
+}
+
+/* =========================
+   SETTINGS
+========================= */
+
+$("soundToggle").addEventListener("change",e => {
+  soundEnabled = e.target.checked;
+});
+
+$("speedSelect").addEventListener("change",e => {
+  duration = Number(e.target.value)*1000;
+});
+
+$("themeSelect").addEventListener("change",e => {
+  document.body.classList.toggle(
+    "light",e.target.value === "light"
+  );
+});
+
+$("settingsTop").addEventListener("click",() => {
+  $("soundToggle").focus();
+  $("soundToggle").scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+});
+
+/* =========================
+   PLAYER NAMES
+========================= */
+
+$("saveNames").addEventListener("click",() => {
+  if (spinning) return;
+
+  const oldNames = players.map(p=>p.name);
+
+  players[0].name = $("name1").value.trim() || "Player 1";
+  players[1].name = $("name2").value.trim() || "Player 2";
+
+  // Update saved leaderboard names too
+  players.forEach((player,index) => {
+    const old = leaderboard.find(
+      e => e.name.toLowerCase() === oldNames[index].toLowerCase()
+    );
+
+    if (old && !leaderboard.some(
+      e => e.name.toLowerCase() === player.name.toLowerCase()
+      && e !== old
+    )) {
+      old.name = player.name;
+    }
+  });
+
+  saveLeaderboard();
+  updatePlayer();
+
+  $("message").textContent = "Player names updated!";
+});
+
+/* =========================
+   RESET GAME
+========================= */
+
+$("resetBtn").addEventListener("click",() => {
+  if (spinning) return;
+
+  if (!confirm("Reset the current game scores and history?")) {
+    return;
+  }
+
+  saveLeaderboard();
+
+  total = 0;
+  history = [];
+
+  players.forEach(player => {
+    player.wins = 0;
+    player.losses = 0;
+  });
+
+  activePlayer = 0;
+  currentRotation = 0;
+
+  coin.style.transition = "none";
+  coin.style.transform = "rotateY(0deg)";
+
+  $("result").textContent = "READY TO FLIP?";
+  $("message").textContent = "New game started!";
+
+  updateStats();
+  renderHistory();
+  updatePlayer();
+});
+
+/* =========================
+   INITIAL DISPLAY
+========================= */
+
+updateStats();
+renderHistory();
+renderLeaderboard();
+updatePlayer();
+
 </script>
+
 </body>
 </html>
