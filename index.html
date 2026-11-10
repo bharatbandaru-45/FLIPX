@@ -1,117 +1,165 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FLIPX — a beautifully animated coin flip experience. Flip heads or tails, track your stats and challenge a friend.">
-  <meta name="theme-color" content="#080b18">
-  <title>FLIPX — Make the Call</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Head or Tails</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #080816;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.game {
+  text-align: center;
+}
+
+h1 {
+  color: #00f5ff;
+  margin-bottom: 35px;
+  text-shadow: 0 0 15px #00f5ff;
+}
+
+.coin-area {
+  perspective: 1000px;
+  margin: 40px auto;
+}
+
+.coin {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  margin: auto;
+  transform-style: preserve-3d;
+}
+
+.side {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  font-weight: bold;
+  color: #332000;
+  background: linear-gradient(135deg, #fff08a, #ffb700, #d88900);
+  border: 7px solid #ffe36e;
+  box-shadow: 0 0 25px #ffb700;
+  backface-visibility: hidden;
+}
+
+.tails {
+  transform: rotateY(180deg);
+}
+
+.coin.spinning {
+  animation: flip 2s ease-in-out forwards;
+}
+
+@keyframes flip {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(1800deg); }
+}
+
+button {
+  padding: 14px 35px;
+  background: #00f5ff;
+  color: #080816;
+  border: none;
+  border-radius: 30px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 20px #00f5ff;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#result {
+  margin-top: 25px;
+  font-size: 25px;
+  color: #ffcf40;
+  min-height: 30px;
+}
+</style>
 </head>
+
 <body>
-  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div><div class="grid-overlay"></div>
-  <div class="app-shell">
-    <header class="topbar">
-      <a class="brand" href="#" aria-label="FLIPX home"><span class="brand-symbol">✳</span><span>FLIP<span class="brand-x">X</span></span></a>
-      <div class="top-center"><span class="status-pip"></span> THE COIN DECISION ENGINE</div>
-      <div class="top-actions">
-        <button id="soundToggle" class="icon-btn" title="Toggle sound" aria-label="Toggle sound">♫</button>
-        <button id="themeToggle" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">◐</button>
-      </div>
-    </header>
+<div class="game">
+  <h1>HEAD OR TAILS</h1>
 
-    <main>
-      <section class="hero">
-        <div class="hero-kicker"><span></span> EVERY DECISION HAS TWO SIDES <span></span></div>
-        <h1>MAKE THE <em>CALL.</em></h1>
-        <p>Leave it to the flip. Trust the moment.</p>
-      </section>
-
-      <section class="game-layout">
-        <div class="panel flip-panel">
-          <div class="panel-topline"><span>01 / THE FLIP</span><span class="micro-label">FAIR COIN · 50 / 50</span></div>
-          <div class="coin-stage">
-            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
-            <div class="spark spark-one"></div><div class="spark spark-two"></div><div class="spark spark-three"></div>
-            <div id="coin" class="coin coin-gold" data-rotation="0" aria-label="Coin showing heads">
-              <div class="coin-edge"></div>
-              <div class="coin-face coin-heads"><span class="coin-ring"></span><span class="coin-letter">H</span><small>FLIPX · 2026</small></div>
-              <div class="coin-face coin-tails"><span class="coin-ring"></span><span class="coin-letter">T</span><small>FLIPX · 2026</small></div>
-            </div>
-            <div class="coin-shadow"></div>
-          </div>
-          <div id="result" class="result" aria-live="polite"><span class="result-dot"></span> READY WHEN YOU ARE</div>
-          <p class="helper">Pick a side. The universe can handle the rest.</p>
-          <div class="choice-row">
-            <button class="choice active" data-choice="Heads" type="button"><span class="choice-symbol">H</span> HEADS</button>
-            <button class="choice" data-choice="Tails" type="button"><span class="choice-symbol">T</span> TAILS</button>
-          </div>
-          <button id="flipBtn" class="flip-btn" type="button"><span class="button-star">✦</span><span>FLIP THE COIN</span><span class="button-arrow">↗</span></button>
-          <div class="quick-hint"><kbd>SPACE</kbd> FLIP <i></i> <kbd>H</kbd> HEADS <i></i> <kbd>T</kbd> TAILS</div>
-        </div>
-
-        <aside class="side-column">
-          <div class="panel stats-panel">
-            <div class="panel-heading"><div><span class="section-index">02 / PERFORMANCE</span><h2>Your numbers<span class="heading-period">.</span></h2></div><span class="live-tag"><b></b> LIVE</span></div>
-            <div class="stats-grid">
-              <div class="stat stat-main"><span class="stat-label">TOTAL FLIPS</span><strong id="totalFlips">00</strong><span class="stat-note">all-time rounds</span></div>
-              <div class="stat"><span class="stat-label">WIN RATE</span><strong id="winRate">0<span>%</span></strong><span class="stat-note">your call accuracy</span></div>
-              <div class="stat"><span class="stat-label">HEADS</span><strong id="headsCount">0</strong><span class="stat-note">landed heads</span></div>
-              <div class="stat"><span class="stat-label">TAILS</span><strong id="tailsCount">0</strong><span class="stat-note">landed tails</span></div>
-            </div>
-            <div class="split-meter"><div id="headsMeter"></div><div id="tailsMeter"></div></div>
-            <div class="meter-labels"><span>● HEADS <b id="headsPercent">50%</b></span><span>● TAILS <b id="tailsPercent">50%</b></span></div>
-            <div class="streak-row"><span>✦ CURRENT WIN STREAK</span><strong id="streak">0 <small>IN A ROW</small></strong></div>
-          </div>
-
-          <div class="panel challenge-panel">
-            <div class="challenge-top"><span class="section-index">03 / DAILY QUEST</span><span class="challenge-icon">✧</span></div>
-            <h2>THE DECIDER<span class="heading-period">.</span></h2>
-            <p>Flip ten times today. Make every toss count.</p>
-            <div class="challenge-progress-line"><div id="challengeProgress"></div></div>
-            <div class="progress-label"><strong id="challengeCount">0 / 10</strong><span id="challengeStatus">QUEST IN PROGRESS</span></div>
-          </div>
-        </aside>
-      </section>
-
-      <section class="lower-grid">
-        <div class="panel settings-panel">
-          <div class="panel-heading"><div><span class="section-index">04 / PERSONALISE</span><h2>Your setup<span class="heading-period">.</span></h2></div><span class="panel-icon">⌘</span></div>
-          <label class="field-label" for="coinStyle">COIN FINISH</label>
-          <div class="coin-options">
-            <button class="swatch active" data-coin="gold" aria-label="Gold coin" title="Gold"><span class="swatch-gold"></span></button>
-            <button class="swatch" data-coin="silver" aria-label="Silver coin" title="Silver"><span class="swatch-silver"></span></button>
-            <button class="swatch" data-coin="copper" aria-label="Copper coin" title="Copper"><span class="swatch-copper"></span></button>
-            <button class="swatch" data-coin="neon" aria-label="Neon coin" title="Neon"><span class="swatch-neon"></span></button>
-          </div>
-          <label class="switch-line"><span><b>Two-player mode</b><small>Pass the device and take turns</small></span><input id="twoPlayer" type="checkbox"><i></i></label>
-          <div id="playersBox" class="players-box hidden">
-            <div class="player-score"><span>PLAYER 01</span><strong id="playerOneScore">0</strong></div>
-            <div class="player-score"><span>PLAYER 02</span><strong id="playerTwoScore">0</strong></div>
-            <p id="turnLabel">PLAYER 01'S TURN</p>
-            <button id="resetPlayers" class="text-btn" type="button">RESET MATCH ↻</button>
-          </div>
-        </div>
-
-        <div class="panel leaderboard-panel">
-          <div class="panel-heading"><div><span class="section-index">05 / HIGH SCORES</span><h2>Leaderboard<span class="heading-period">.</span></h2></div><span class="panel-icon">♜</span></div>
-          <p class="panel-description">Your best streaks, saved on this device.</p>
-          <ol id="leaderboard" class="leaderboard"><li class="empty-state">Your name belongs up here.</li></ol>
-          <div class="local-note"><span></span> LOCAL LEADERBOARD</div>
-        </div>
-
-        <div class="panel history-panel">
-          <div class="panel-heading"><div><span class="section-index">06 / THE RECEIPTS</span><h2>Flip history<span class="heading-period">.</span></h2></div><button id="clearHistory" class="text-btn" type="button">CLEAR ↗</button></div>
-          <ul id="history" class="history-list"><li class="empty-state">Your flips will show up here.</li></ul>
-        </div>
-      </section>
-    </main>
-    <footer><a class="footer-brand" href="#">FLIP<span>X</span></a><span>NO OVERTHINKING. JUST FLIPPING.</span><span>© <span id="year"></span> FLIPX STUDIO</span></footer>
+  <div class="coin-area">
+    <div class="coin" id="coin">
+      <div class="side">HEAD</div>
+      <div class="side tails">TAILS</div>
+    </div>
   </div>
-  <div id="toast" class="toast" role="status"></div>
-  <script src="script.js"></script>
+
+  <button id="spinBtn" onclick="spinCoin()">SPIN COIN</button>
+
+  <div id="result">Ready to flip?</div>
+</div>
+
+<script>
+const coin = document.getElementById("coin");
+const button = document.getElementById("spinBtn");
+const result = document.getElementById("result");
+
+let spinning = false;
+
+function spinCoin() {
+  if (spinning) return;
+
+  spinning = true;
+  button.disabled = true;
+  result.textContent = "Spinning...";
+
+  const isHeads = Math.random() < 0.5;
+
+  coin.classList.remove("spinning");
+
+  // Reset animation
+  coin.style.transform = isHeads
+    ? "rotateY(0deg)"
+    : "rotateY(180deg)";
+
+  void coin.offsetWidth;
+
+  coin.style.transform = "";
+  coin.classList.add("spinning");
+
+  setTimeout(() => {
+    coin.classList.remove("spinning");
+
+    coin.style.transform = isHeads
+      ? "rotateY(1800deg)"
+      : "rotateY(1980deg)";
+
+    result.textContent = isHeads
+      ? "🪙 HEADS!"
+      : "🪙 TAILS!";
+
+    button.disabled = false;
+    spinning = false;
+  }, 2000);
+}
+</script>
 </body>
 </html>
